@@ -1,4 +1,8 @@
 package com.libraryclient.libraryclient.ui
+
+import org.springframework.stereotype.Component
+
+@Component
 class Shape {
 
     fun makeRec(num : Int, str : String){

@@ -1,15 +1,19 @@
 package com.libraryclient.libraryclient.ui
 
+import org.springframework.stereotype.Component
 import java.util.*
 
-class MainPage {
+@Component
+class MainPage(
+    private val shape: Shape,
+    private val login: Login,
+    private val register: Register
+) {
 
     fun mainpage() {
 
         val scanner : Scanner = Scanner(System.`in`)
-        val shape = Shape()
         while(true){
-
             shape.makeRec(5,"Library System")
             shape.makeRec(3, "Main Page")
             println("1. Login\n2. Register\n3. Finish")
@@ -18,12 +22,10 @@ class MainPage {
             when(ch!!) {
                 "1" -> {
                     println("Login Selected")
-                    val login = Login()
                     login.loginUser()
                 }
                 "2"->{
                     println("Register Selected")
-                    val register = Register()
                     register.registerUser()
                 }
                 "3"->{

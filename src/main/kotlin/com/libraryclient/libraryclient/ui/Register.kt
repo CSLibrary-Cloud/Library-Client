@@ -1,10 +1,13 @@
 package com.libraryclient.libraryclient.ui
 
-class Register {
+import org.springframework.stereotype.Component
+
+@Component
+class Register(
+    private val shape: Shape
+) {
 
     fun registerUser(){
-
-        val shape = Shape()
         shape.makeRec(3,"Register Page")
         println("Enter your Info")
         print("ID : ")

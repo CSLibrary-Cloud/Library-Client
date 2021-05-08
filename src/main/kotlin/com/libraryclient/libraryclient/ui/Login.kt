@@ -1,9 +1,13 @@
 package com.libraryclient.libraryclient.ui
 
-class Login {
+import org.springframework.stereotype.Component
+
+@Component
+class Login(
+    private val shape: Shape
+) {
 
     fun loginUser(){
-        val shape = Shape()
         shape.makeRec(3,"Login Page")
 
         print("ID : ")
