@@ -2,13 +2,19 @@ package com.libraryclient.libraryclient.ui
 
 import org.springframework.stereotype.Component
 import java.util.*
+import javax.annotation.PostConstruct
 
 @Component
 class MainPage(
     private val shape: Shape,
     private val login: Login,
-    private val register: Register
+    private val register: Register,
 ) {
+
+    @PostConstruct
+    fun initiateMainApplication() {
+        mainpage()
+    }
 
     fun mainpage() {
 
