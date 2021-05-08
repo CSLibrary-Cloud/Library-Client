@@ -13,10 +13,10 @@ class MainPage(
 
     @PostConstruct
     fun initiateMainApplication() {
-        mainpage()
+        mainPage()
     }
 
-    fun mainpage() {
+    private fun mainPage() {
 
         val scanner : Scanner = Scanner(System.`in`)
         while(true){
