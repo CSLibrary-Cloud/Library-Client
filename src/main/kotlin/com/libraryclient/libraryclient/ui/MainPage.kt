@@ -1,9 +1,5 @@
-package ui
+package com.libraryclient.libraryclient.ui
 
-import org.springframework.boot.runApplication
-import ui.Login
-import ui.Register
-import ui.Shape
 import java.util.*
 
 class MainPage {

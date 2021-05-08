@@ -1,5 +1,4 @@
-package data.request
-import data.User
+package com.libraryclient.libraryclient.data.request
 
 data class RegisterRequest(
     var userId: String = "",

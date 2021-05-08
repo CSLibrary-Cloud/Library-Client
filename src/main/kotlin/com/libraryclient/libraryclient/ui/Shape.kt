@@ -1,4 +1,4 @@
-package ui
+package com.libraryclient.libraryclient.ui
 class Shape {
 
     fun makeRec(num : Int, str : String){

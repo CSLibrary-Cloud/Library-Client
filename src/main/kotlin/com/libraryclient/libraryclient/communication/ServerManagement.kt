@@ -1,7 +1,9 @@
+package com.libraryclient.libraryclient.communication
+
 import com.cslibrary.library.data.dto.response.LoginResponse
 import com.cslibrary.library.data.dto.response.RegisterResponse
-import data.request.LoginRequest
-import data.request.RegisterRequest
+import com.libraryclient.libraryclient.data.request.LoginRequest
+import com.libraryclient.libraryclient.data.request.RegisterRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForEntity

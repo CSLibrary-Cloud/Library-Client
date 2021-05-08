@@ -1,8 +1,8 @@
-package data
+package com.libraryclient.libraryclient.data
 
-import data.request.LoginRequest
-import data.request.RegisterRequest
-import ServerManagement
+import com.libraryclient.libraryclient.data.request.LoginRequest
+import com.libraryclient.libraryclient.data.request.RegisterRequest
+import com.libraryclient.libraryclient.communication.ServerManagement
 
 data class User(
     var userId: String = "",
