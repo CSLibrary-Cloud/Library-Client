@@ -1,0 +1,4 @@
+cs-library:
+  serverScheme: http
+  serverAddress: localhost
+  serverPort: 8080
