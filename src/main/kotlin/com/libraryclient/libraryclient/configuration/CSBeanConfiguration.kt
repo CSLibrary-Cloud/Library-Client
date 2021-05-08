@@ -1,5 +1,6 @@
 package com.libraryclient.libraryclient.configuration
 
+import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.client.RestTemplate
@@ -8,5 +9,7 @@ import org.springframework.web.client.RestTemplate
 class CSBeanConfiguration {
     // Scope: Singleton
     @Bean
-    fun getRestTemplate(): RestTemplate = RestTemplate()
+    fun getRestTemplate(builder: RestTemplateBuilder): RestTemplate {
+        return builder.build()
+    }
 }
