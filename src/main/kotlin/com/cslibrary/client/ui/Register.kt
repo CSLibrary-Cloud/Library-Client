@@ -11,13 +11,13 @@ class Register(
         shape.makeRec(3,"Register Page")
         println("Enter your Info")
         print("ID : ")
-        val id: String = readLine()!!
+        val userId: String = readLine()!!
         print("Password : ")
-        val pw: String = readLine()!!
+        val userPassword: String = readLine()!!
         print("userName : ")
-        val name: String = readLine()!!
+        val userName: String = readLine()!!
         print("PhoneNumber : ")
-        val phone: String = readLine()!!
+        val userPhoneNumber: String = readLine()!!
 
     }
 
