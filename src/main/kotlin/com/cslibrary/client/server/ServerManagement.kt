@@ -15,6 +15,8 @@ class ServerManagement (
     private val serverConfiguration: ServerConfiguration,
     private val restTemplate: RestTemplate
 ) {
+    // Login token storage
+    private var loginToken: String? = null
 
     fun signUpCommunication(registerRequest: RegisterRequest) : RegisterResponse {
         val registerResponse: ResponseEntity<RegisterResponse> =
@@ -25,6 +27,7 @@ class ServerManagement (
     fun loginCommunication(loginRequest: LoginRequest) : LoginResponse {
         val loginResponse: ResponseEntity<LoginResponse> =
             restTemplate.postForEntity("${serverConfiguration.serverBaseAddress}/api/v1/login", loginRequest, LoginResponse::class)
+        loginToken = loginResponse.body!!.userToken
         return loginResponse.body!!
     }
 }
