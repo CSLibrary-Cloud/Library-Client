@@ -13,7 +13,9 @@ class MainPage(
 
     @PostConstruct
     fun initiateMainApplication() {
-//        mainPage()
+        if (System.getProperty("kdr.isTesting") != "test") {
+            mainPage()
+        }
     }
 
     private fun mainPage() {

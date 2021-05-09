@@ -34,5 +34,6 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.withType<Test> {
+	systemProperty("kdr.isTesting", "test")
 	useJUnitPlatform()
 }
