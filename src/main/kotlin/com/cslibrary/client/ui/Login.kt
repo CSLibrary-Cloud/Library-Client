@@ -1,4 +1,4 @@
-package com.libraryclient.libraryclient.ui
+package com.cslibrary.client.ui
 
 import org.springframework.stereotype.Component
 

@@ -1,4 +1,4 @@
-package com.libraryclient.libraryclient.configuration
+package com.cslibrary.client.configuration
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct
 
 @ConstructorBinding
 @ConfigurationProperties("cs-library")
-
 class ServerConfiguration(
     private val serverScheme: String,
     private val serverAddress: String,

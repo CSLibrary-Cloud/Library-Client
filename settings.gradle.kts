@@ -1,1 +1,1 @@
-rootProject.name = "library-client"
+rootProject.name = "demo"

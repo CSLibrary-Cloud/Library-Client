@@ -1,4 +1,4 @@
-package com.cslibrary.library.data.dto.response
+package com.cslibrary.client.data.response
 
 data class RegisterResponse(
     var registeredId: String

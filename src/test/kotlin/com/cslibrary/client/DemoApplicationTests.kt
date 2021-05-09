@@ -1,10 +1,10 @@
-package com.libraryclient.libraryclient
+package com.cslibrary.client
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class LibraryClientApplicationTests {
+class DemoApplicationTests {
 
 	@Test
 	fun contextLoads() {

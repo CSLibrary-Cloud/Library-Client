@@ -1,4 +1,4 @@
-package com.libraryclient.libraryclient.configuration
+package com.cslibrary.client.configuration
 
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean

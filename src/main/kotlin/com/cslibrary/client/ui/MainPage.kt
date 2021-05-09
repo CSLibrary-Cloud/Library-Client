@@ -1,4 +1,4 @@
-package com.libraryclient.libraryclient.ui
+package com.cslibrary.client.ui
 
 import org.springframework.stereotype.Component
 import java.util.*
@@ -13,7 +13,7 @@ class MainPage(
 
     @PostConstruct
     fun initiateMainApplication() {
-        mainPage()
+//        mainPage()
     }
 
     private fun mainPage() {

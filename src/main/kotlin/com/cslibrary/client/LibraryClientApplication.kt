@@ -1,14 +1,14 @@
-package com.libraryclient.libraryclient
+package com.cslibrary.client
 
-import com.libraryclient.libraryclient.configuration.ServerConfiguration
+import com.cslibrary.client.configuration.ServerConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
-@EnableConfigurationProperties(ServerConfiguration::class)
 @SpringBootApplication
-class LibraryClientApplication
+@EnableConfigurationProperties(ServerConfiguration::class)
+class DemoApplication
 
 fun main(args: Array<String>) {
-	runApplication<LibraryClientApplication>(*args)
+	runApplication<DemoApplication>(*args)
 }
