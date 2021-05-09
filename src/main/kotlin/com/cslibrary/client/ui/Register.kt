@@ -1,10 +1,14 @@
 package com.cslibrary.client.ui
 
+import com.cslibrary.client.data.request.RegisterRequest
+import com.cslibrary.client.data.response.RegisterResponse
+import com.cslibrary.client.server.ServerManagement
 import org.springframework.stereotype.Component
 
 @Component
 class Register(
-    private val shape: Shape
+    private val shape: Shape,
+    private val serverManagement: ServerManagement
 ) {
 
     fun registerUser(){
@@ -19,6 +23,16 @@ class Register(
         print("PhoneNumber : ")
         val userPhoneNumber: String = readLine()!!
 
+        // Register
+        val registerResponse: RegisterResponse = serverManagement.signUpCommunication(
+            RegisterRequest(
+                userId = userId,
+                userPassword = userPassword,
+                userName = userName,
+                userPhoneNumber = userPhoneNumber
+            )
+        )
+        println("Successfully registered with: ${registerResponse.registeredId}")
     }
 
 }
