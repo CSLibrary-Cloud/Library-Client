@@ -11,9 +11,9 @@ class Login(
         shape.makeRec(3,"Login Page")
 
         print("ID : ")
-        val id = readLine()
+        val userId: String = readLine()!!
         print("PW : ")
-        val pw = readLine()
+        val userPassword: String = readLine()!!
 
         //login 확인하기
 
