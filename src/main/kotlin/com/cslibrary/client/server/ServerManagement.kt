@@ -5,9 +5,14 @@ import com.cslibrary.client.data.request.LoginRequest
 import com.cslibrary.client.data.request.RegisterRequest
 import com.cslibrary.client.data.response.LoginResponse
 import com.cslibrary.client.data.response.RegisterResponse
+import com.cslibrary.client.data.response.SeatResponse
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.exchange
 import org.springframework.web.client.postForEntity
 
 @Component
@@ -29,5 +34,26 @@ class ServerManagement (
             restTemplate.postForEntity("${serverConfiguration.serverBaseAddress}/api/v1/login", loginRequest, LoginResponse::class)
         loginToken = loginResponse.body!!.userToken
         return loginResponse.body!!
+    }
+
+    fun getSeatInformation(): List<SeatResponse> {
+        val httpEntity: HttpEntity<Void> = getHttpEntityWithToken(null)
+        val seatResponse: ResponseEntity<List<SeatResponse>> =
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/seat", HttpMethod.GET, httpEntity)
+
+        return seatResponse.body!!
+    }
+
+    /**
+     * returns httpEntity with token applied.
+     * add headerEntity if there is any body to sent to server.
+     * [headerEntity = HTTP Body to send]
+     */
+    private inline fun <reified T> getHttpEntityWithToken(httpBody: T?): HttpEntity<T> {
+        val httpHeaders: HttpHeaders = HttpHeaders().apply {
+            put("X-AUTH-TOKEN", mutableListOf(loginToken))
+        }
+
+        return HttpEntity(httpBody, httpHeaders)
     }
 }
