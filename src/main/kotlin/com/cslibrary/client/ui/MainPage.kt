@@ -40,6 +40,9 @@ class MainPage(
                     println("Finished")
                     return
                 }
+                null ->{
+                    println("다시 입력해주세요.")
+                }
             }
         }
     }

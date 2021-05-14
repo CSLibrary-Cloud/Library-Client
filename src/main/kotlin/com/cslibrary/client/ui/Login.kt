@@ -11,25 +11,37 @@ class Login(
     private val serverManagement: ServerManagement
 ) {
 
-    fun loginUser(){
-        shape.makeRec(3,"Login Page")
+    fun loginUser() {
 
-        print("ID : ")
-        val userId: String = readLine()!!
-        print("PW : ")
-        val userPassword: String = readLine()!!
+        while (true) {
 
-        //login 확인하기
-        val loginResponse: LoginResponse = serverManagement.loginCommunication(
-            LoginRequest(
-                userId = userId,
-                userPassword = userPassword
-            )
-        )
+            shape.makeRec(3, "Login Page")
+            print("ID : ")
+            val userId: String = readLine()!!
+            print("PW : ")
+            val userPassword: String = readLine()!!
 
-        //response로 받은 token
-        if (loginResponse.userToken.isNotEmpty()) {
-            println("Successfully Logged-In!")
+            if (userId == null || userPassword == null) {
+                print("입력이 되지 않았습니다. 다시 입력해주세요.")
+            } else {
+
+                //login 확인하기
+                val loginResponse: LoginResponse = serverManagement.loginCommunication(
+                    LoginRequest(
+                        userId = userId,
+                        userPassword = userPassword
+                    )
+                )
+
+                //response로 받은 token
+                if (loginResponse.userToken.isNotEmpty()) {
+                    println("Successfully Logged-In!")
+
+                    //seat 화면으로 이동
+                }
+
+                break
+            }
         }
     }
 }
