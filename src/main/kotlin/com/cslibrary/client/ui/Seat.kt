@@ -11,15 +11,14 @@ class Seat (
 
     val scanner: Scanner = Scanner(System.`in`)
 
-    private fun showSeat() {
+    fun showSeat() {
+        val seatResponse : List<SeatResponse> = serverManagement.getSeatInformation()
+        if(seatResponse.isNotEmpty()){
+            shape.makeSeat(seatResponse)
+        }
 
-        //seat 확인
-
-        val arr = listOf<SeatResponse>()
-
-        // SeatResponse arr 에 담기
-
-        shape.makeSeat(arr)
+        print("Press Enter to go back")
+        scanner.nextLine()
     }
 
     fun chooseSeat() {
@@ -29,7 +28,7 @@ class Seat (
         while (true) {
             print("Choose the Seat Number : ")
             val num = scanner.next()
-            println(num)
+            println("Choosed $num")
             num?.let {
                 //선택 좌석 서버 전달
 
