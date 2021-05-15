@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component
 @Component
 class Login(
     private val shape: Shape,
-    private val serverManagement: ServerManagement
+    private val serverManagement: ServerManagement,
+    private val secondPage: SecondPage,
 ) {
 
     fun loginUser() {
@@ -36,10 +37,8 @@ class Login(
                 //response로 받은 token
                 if (loginResponse.userToken.isNotEmpty()) {
                     println("Successfully Logged-In!")
-
-                    //seat 화면으로 이동
+                    secondPage.secondPage()
                 }
-
                 break
             }
         }
