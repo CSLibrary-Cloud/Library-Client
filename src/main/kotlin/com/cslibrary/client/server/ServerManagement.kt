@@ -3,9 +3,12 @@ package com.cslibrary.client.server
 import com.cslibrary.client.configuration.ServerConfiguration
 import com.cslibrary.client.data.request.LoginRequest
 import com.cslibrary.client.data.request.RegisterRequest
+import com.cslibrary.client.data.request.SeatSelectRequest
 import com.cslibrary.client.data.response.LoginResponse
 import com.cslibrary.client.data.response.RegisterResponse
 import com.cslibrary.client.data.response.SeatResponse
+import com.cslibrary.client.data.response.SeatSelectResponse
+import org.apache.coyote.Response
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -43,6 +46,20 @@ class ServerManagement (
 
         return seatResponse.body!!
     }
+
+    //selecting seat
+    fun seatSelectCommunication(seatSelectRequest: SeatSelectRequest) : SeatSelectResponse {
+        val httpEntity: HttpEntity<SeatSelectRequest> = getHttpEntityWithToken(seatSelectRequest)
+        val seatSelectResponse: ResponseEntity<SeatSelectResponse> =
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/seat", HttpMethod.POST, httpEntity)
+
+        return seatSelectResponse.body!!
+    }
+
+    /**
+     * TODO: WE NEED TO CHANGE SEAT
+     * how to distinguish between selection & change?
+     */
 
     /**
      * returns httpEntity with token applied.

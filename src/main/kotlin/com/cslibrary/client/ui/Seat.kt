@@ -2,8 +2,10 @@ package com.cslibrary.client.ui
 
 import com.cslibrary.client.data.response.SeatResponse
 import com.cslibrary.client.server.ServerManagement
+import org.springframework.stereotype.Component
 import java.util.*
 
+@Component
 class Seat (
     private val shape: Shape,
     private val serverManagement: ServerManagement
