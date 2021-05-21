@@ -1,9 +1,7 @@
 package com.cslibrary.client.server
 
 import com.cslibrary.client.configuration.ServerConfiguration
-import com.cslibrary.client.data.request.LoginRequest
-import com.cslibrary.client.data.request.RegisterRequest
-import com.cslibrary.client.data.request.SeatSelectRequest
+import com.cslibrary.client.data.request.*
 import com.cslibrary.client.data.response.LoginResponse
 import com.cslibrary.client.data.response.RegisterResponse
 import com.cslibrary.client.data.response.SeatResponse
@@ -56,10 +54,37 @@ class ServerManagement (
         return seatSelectResponse.body!!
     }
 
-    /**
-     * TODO: WE NEED TO CHANGE SEAT
-     * how to distinguish between selection & change?
-     */
+    fun seatChangeCommunication(seatSelectRequest: SeatSelectRequest) : SeatSelectResponse {
+        val httpEntity: HttpEntity<SeatSelectRequest> = getHttpEntityWithToken(seatSelectRequest)
+        val seatSelectResponse: ResponseEntity<SeatSelectResponse> =
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/seat", HttpMethod.PUT, httpEntity)
+
+        return seatSelectResponse.body!!
+    }
+
+    fun stateCommunication(stateChangeRequest: StateChangeRequest) : Void {
+        val httpEntity: HttpEntity<StateChangeRequest> = getHttpEntityWithToken(stateChangeRequest)
+        val changeStateResponse: ResponseEntity<Void> =
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/state", HttpMethod.PUT, httpEntity)
+
+        return changeStateResponse.body!!
+    }
+
+    fun reportCommunication(reportRequest: ReportRequest) : Void {
+        val httpEntity: HttpEntity<ReportRequest> = getHttpEntityWithToken(reportRequest)
+        val reportResponse: ResponseEntity<Void> =
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/report", HttpMethod.POST, httpEntity)
+
+        return reportResponse.body!!
+    }
+
+    fun extendTimeCommunication() : Void {
+        val httpEntity: HttpEntity<Void> = getHttpEntityWithToken(null)
+        val extendTimeResponse: ResponseEntity<Void> =
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/extend", HttpMethod.POST, httpEntity)
+
+        return extendTimeResponse.body!!
+    }
 
     /**
      * returns httpEntity with token applied.
