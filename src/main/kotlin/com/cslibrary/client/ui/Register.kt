@@ -30,7 +30,7 @@ class Register(
             }
             else{
                 // Register 하기
-                val registerResponse: RegisterResponse = serverManagement.signUpCommunication(
+                val registerResponse: RegisterResponse? = serverManagement.signUpCommunication(
                     RegisterRequest(
                         userId = userId,
                         userPassword = userPassword,
@@ -40,7 +40,7 @@ class Register(
                 )
 
                 //response 로 받은 id
-                println("Successfully registered with: ${registerResponse.registeredId}")
+                println("Successfully registered with: ${registerResponse?.registeredId}")
 
                 break
             }

@@ -6,7 +6,7 @@ import com.cslibrary.client.data.response.LoginResponse
 import com.cslibrary.client.data.response.RegisterResponse
 import com.cslibrary.client.data.response.SeatResponse
 import com.cslibrary.client.data.response.SeatSelectResponse
-import org.apache.coyote.Response
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -24,17 +24,31 @@ class ServerManagement (
     // Login token storage
     private var loginToken: String? = null
 
-    fun signUpCommunication(registerRequest: RegisterRequest) : RegisterResponse {
-        val registerResponse: ResponseEntity<RegisterResponse> =
+    fun signUpCommunication(registerRequest: RegisterRequest) : RegisterResponse? {
+        val response: ResponseEntity<String> =
             restTemplate.postForEntity("${serverConfiguration.serverBaseAddress}/api/v1/user", registerRequest)
-        return registerResponse.body!!
+        val mapper = jacksonObjectMapper()
+        return try {
+            mapper.readValue(response.body, RegisterResponse::class.java)
+        } catch (e: Exception) {
+            print(e.message) // TODO: how to convert Exception to Map??
+            return null
+        }
     }
 
-    fun loginCommunication(loginRequest: LoginRequest) : LoginResponse {
-        val loginResponse: ResponseEntity<LoginResponse> =
+    fun loginCommunication(loginRequest: LoginRequest) : LoginResponse? {
+        val response: ResponseEntity<String> =
             restTemplate.postForEntity("${serverConfiguration.serverBaseAddress}/api/v1/login", loginRequest, LoginResponse::class)
-        loginToken = loginResponse.body!!.userToken
-        return loginResponse.body!!
+        return try {
+            val mapper = jacksonObjectMapper()
+            val loginResponse = mapper.readValue(response.body, LoginResponse::class.java)
+            loginToken = loginResponse.userToken
+            loginResponse
+        } catch (e: Exception) {
+            print(e.message)
+            return null
+        }
+
     }
 
     fun getSeatInformation(): List<SeatResponse> {

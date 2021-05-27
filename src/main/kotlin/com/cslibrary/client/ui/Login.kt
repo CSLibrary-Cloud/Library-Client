@@ -27,7 +27,7 @@ class Login(
             } else {
 
                 //login 확인하기
-                val loginResponse: LoginResponse = serverManagement.loginCommunication(
+                val loginResponse: LoginResponse? = serverManagement.loginCommunication(
                     LoginRequest(
                         userId = userId,
                         userPassword = userPassword
@@ -35,7 +35,7 @@ class Login(
                 )
 
                 //response로 받은 token
-                if (loginResponse.userToken.isNotEmpty()) {
+                if (loginResponse?.userToken!!.isNotEmpty()) {
                     println("Successfully Logged-In!")
                     secondPage.secondPage()
                 }
