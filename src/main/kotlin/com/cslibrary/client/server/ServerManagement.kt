@@ -99,6 +99,14 @@ class ServerManagement (
         return extendTimeResponse.body!!
     }
 
+    fun saveLeftTimeCommunication(saveLeftTime: SaveLeftTime) : SaveLeftTimeResponse {
+        val httpEntity: HttpEntity<SaveLeftTime> = getHttpEntityWithToken(saveLeftTime)
+        val saveLeftTimeResponse: ResponseEntity<SaveLeftTimeResponse> =
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/user/time", HttpMethod.POST, httpEntity)
+
+        return saveLeftTimeResponse.body!! // it has leaderBoardList & userNotification List
+    }
+
     /**
      * returns httpEntity with token applied.
      * add headerEntity if there is any body to sent to server.
