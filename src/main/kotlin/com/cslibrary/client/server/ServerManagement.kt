@@ -2,10 +2,7 @@ package com.cslibrary.client.server
 
 import com.cslibrary.client.configuration.ServerConfiguration
 import com.cslibrary.client.data.request.*
-import com.cslibrary.client.data.response.LoginResponse
-import com.cslibrary.client.data.response.RegisterResponse
-import com.cslibrary.client.data.response.SeatResponse
-import com.cslibrary.client.data.response.SeatSelectResponse
+import com.cslibrary.client.data.response.*
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -24,6 +21,7 @@ class ServerManagement (
     // Login token storage
     private var loginToken: String? = null
 
+    // Exception will be added later
     fun signUpCommunication(registerRequest: RegisterRequest) : RegisterResponse? {
         val response: ResponseEntity<String> =
             restTemplate.postForEntity("${serverConfiguration.serverBaseAddress}/api/v1/user", registerRequest)
@@ -31,11 +29,12 @@ class ServerManagement (
         return try {
             mapper.readValue(response.body, RegisterResponse::class.java)
         } catch (e: Exception) {
-            print(e.message) // TODO: how to convert Exception to Map??
+            print(e.message)
             return null
         }
     }
 
+    // Exception will be added later
     fun loginCommunication(loginRequest: LoginRequest) : LoginResponse? {
         val response: ResponseEntity<String> =
             restTemplate.postForEntity("${serverConfiguration.serverBaseAddress}/api/v1/login", loginRequest, LoginResponse::class)
@@ -60,12 +59,12 @@ class ServerManagement (
     }
 
     //selecting seat
-    fun seatSelectCommunication(seatSelectRequest: SeatSelectRequest) : SeatSelectResponse {
+    fun seatSelectCommunication(seatSelectRequest: SeatSelectRequest) : UserLeftTimeResponse {
         val httpEntity: HttpEntity<SeatSelectRequest> = getHttpEntityWithToken(seatSelectRequest)
-        val seatSelectResponse: ResponseEntity<SeatSelectResponse> =
+        val userLeftTimeResponse: ResponseEntity<UserLeftTimeResponse> =
             restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/seat", HttpMethod.POST, httpEntity)
 
-        return seatSelectResponse.body!!
+        return userLeftTimeResponse.body!! //userLeftTimeResponse에 reservedSeat와 leftTime 정보가 있을 것입니다.
     }
 
     fun seatChangeCommunication(seatSelectRequest: SeatSelectRequest) : SeatSelectResponse {
