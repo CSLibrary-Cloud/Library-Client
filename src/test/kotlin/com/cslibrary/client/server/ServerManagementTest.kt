@@ -3,6 +3,7 @@ package com.cslibrary.client.server
 import com.cslibrary.client.data.request.LoginRequest
 import com.cslibrary.client.data.request.RegisterRequest
 import com.cslibrary.client.data.request.SeatSelectRequest
+import com.cslibrary.client.data.request.StateChangeRequest
 import com.cslibrary.client.data.response.LoginResponse
 import com.cslibrary.client.data.response.RegisterResponse
 import com.cslibrary.client.data.response.SeatResponse
@@ -30,13 +31,14 @@ class ServerManagementTest {
             userPhoneNumber = "010-xxxx-xxxx"
         )
 
-        val registerResponse: RegisterResponse = serverManagement.signUpCommunication(mockRegisterRequest)
+        val registerResponse: RegisterResponse? = serverManagement.signUpCommunication(mockRegisterRequest)
 
-        assertThat(registerResponse.registeredId).isEqualTo(mockRegisterRequest.userId)
+        assertThat(registerResponse?.registeredId).isEqualTo(mockRegisterRequest.userId)
     }
 
     @Test
     fun is_loginCommunication_works_well() {
+
         val mockRegisterRequest: RegisterRequest = RegisterRequest(
             userId = "kangdroid",
             userName = "kangdroid",
@@ -50,8 +52,9 @@ class ServerManagementTest {
             userPassword = "kangdroid"
         )
 
-        val loginResponse: LoginResponse = serverManagement.loginCommunication(loginRequest)
-        assertThat(loginResponse.userToken).isNotEqualTo("")
+        val loginResponse: LoginResponse? = serverManagement.loginCommunication(loginRequest)
+
+        assertThat(loginResponse?.userToken).isNotEqualTo("")
     }
 
     @Test
@@ -99,4 +102,36 @@ class ServerManagementTest {
 
         assertThat(seatSelectResponse.reservedSeatNumber).isEqualTo(seatSelectRequest.seatNumber)
     }
+
+    @Test
+    fun is_seatChangeCommunication_works_well() {
+        val mockRegisterRequest: RegisterRequest = RegisterRequest(
+            userId = "kangdroid",
+            userName = "kangdroid",
+            userPassword = "kangdroid",
+            userPhoneNumber = "010-xxxx-xxxx"
+        )
+        serverManagement.signUpCommunication(mockRegisterRequest)
+
+        val loginRequest: LoginRequest = LoginRequest(
+            userId = "kangdroid",
+            userPassword = "kangdroid"
+        )
+        serverManagement.loginCommunication(loginRequest)
+
+        val seatSelectRequest: SeatSelectRequest = SeatSelectRequest(
+            seatNumber = 1
+        )
+
+        val seatSelectResponse: SeatSelectResponse = serverManagement.seatSelectCommunication(seatSelectRequest)
+
+        val seatChangeRequest: SeatSelectRequest = SeatSelectRequest(
+            seatNumber = 3
+        )
+
+        val seatChangeResponse: SeatSelectResponse = serverManagement.seatChangeCommunication(seatChangeRequest)
+        assertThat(seatChangeResponse.reservedSeatNumber).isEqualTo(seatChangeRequest.seatNumber)
+    }
+
+
 }
