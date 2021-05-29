@@ -92,9 +92,9 @@ class ServerManagementTest {
             seatNumber = 1
         )
 
-        val seatSelectResponse : UserLeftTimeResponse = serverManagement.seatSelectCommunication(seatSelectRequest)
+        val seatSelectResponse : UserLeftTimeResponse? = serverManagement.seatSelectCommunication(seatSelectRequest)
 
-        assertThat(seatSelectResponse.reservedSeat.reservedSeatNumber).isEqualTo(seatSelectRequest.seatNumber)
+        assertThat(seatSelectResponse?.reservedSeat?.reservedSeatNumber).isEqualTo(seatSelectRequest.seatNumber)
     }
 
     @Test
@@ -117,14 +117,14 @@ class ServerManagementTest {
             seatNumber = 1
         )
 
-        val seatSelectResponse: UserLeftTimeResponse = serverManagement.seatSelectCommunication(seatSelectRequest)
+        val seatSelectResponse: UserLeftTimeResponse? = serverManagement.seatSelectCommunication(seatSelectRequest)
 
         val seatChangeRequest: SeatSelectRequest = SeatSelectRequest(
             seatNumber = 3
         )
 
-        val seatChangeResponse: SeatSelectResponse = serverManagement.seatChangeCommunication(seatChangeRequest)
-        assertThat(seatChangeResponse.reservedSeatNumber).isEqualTo(seatChangeRequest.seatNumber)
+        val seatChangeResponse: SeatSelectResponse? = serverManagement.seatChangeCommunication(seatChangeRequest)
+        assertThat(seatChangeResponse?.reservedSeatNumber).isEqualTo(seatChangeRequest.seatNumber)
     }
 
     @Test
@@ -152,7 +152,9 @@ class ServerManagementTest {
             leftTime = 100
         )
 
-        val saveTimeResponse: SaveLeftTimeResponse = serverManagement.saveLeftTimeCommunication(mockSaveLeftTime)
-        assertThat(saveTimeResponse.leaderBoardList[0].totalStudyTime).isEqualTo(60*60*3 - mockSaveLeftTime.leftTime)
+        val saveTimeResponse: SaveLeftTimeResponse? = serverManagement.saveLeftTimeCommunication(mockSaveLeftTime)
+        if (saveTimeResponse != null) {
+            assertThat(saveTimeResponse.leaderBoardList[0].totalStudyTime).isEqualTo(60*60*3 - mockSaveLeftTime.leftTime)
+        }
     }
 }
