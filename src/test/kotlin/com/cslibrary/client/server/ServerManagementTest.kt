@@ -1,13 +1,7 @@
 package com.cslibrary.client.server
 
-import com.cslibrary.client.data.request.LoginRequest
-import com.cslibrary.client.data.request.RegisterRequest
-import com.cslibrary.client.data.request.SeatSelectRequest
-import com.cslibrary.client.data.request.StateChangeRequest
-import com.cslibrary.client.data.response.LoginResponse
-import com.cslibrary.client.data.response.RegisterResponse
-import com.cslibrary.client.data.response.SeatResponse
-import com.cslibrary.client.data.response.SeatSelectResponse
+import com.cslibrary.client.data.request.*
+import com.cslibrary.client.data.response.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -98,9 +92,9 @@ class ServerManagementTest {
             seatNumber = 1
         )
 
-        val seatSelectResponse :SeatSelectResponse = serverManagement.seatSelectCommunication(seatSelectRequest)
+        val seatSelectResponse : UserLeftTimeResponse = serverManagement.seatSelectCommunication(seatSelectRequest)
 
-        assertThat(seatSelectResponse.reservedSeatNumber).isEqualTo(seatSelectRequest.seatNumber)
+        assertThat(seatSelectResponse.reservedSeat.reservedSeatNumber).isEqualTo(seatSelectRequest.seatNumber)
     }
 
     @Test
@@ -123,7 +117,7 @@ class ServerManagementTest {
             seatNumber = 1
         )
 
-        val seatSelectResponse: SeatSelectResponse = serverManagement.seatSelectCommunication(seatSelectRequest)
+        val seatSelectResponse: UserLeftTimeResponse = serverManagement.seatSelectCommunication(seatSelectRequest)
 
         val seatChangeRequest: SeatSelectRequest = SeatSelectRequest(
             seatNumber = 3
@@ -133,5 +127,32 @@ class ServerManagementTest {
         assertThat(seatChangeResponse.reservedSeatNumber).isEqualTo(seatChangeRequest.seatNumber)
     }
 
+    @Test
+    fun is_saveLeftTimeCommunication_works_well() {
+        val mockRegisterRequest: RegisterRequest = RegisterRequest(
+            userId = "kangdroid",
+            userName = "kangdroid",
+            userPassword = "kangdroid",
+            userPhoneNumber = "010-xxxx-xxxx"
+        )
+        serverManagement.signUpCommunication(mockRegisterRequest)
 
+        val loginRequest: LoginRequest = LoginRequest(
+            userId = "kangdroid",
+            userPassword = "kangdroid"
+        )
+        serverManagement.loginCommunication(loginRequest)
+
+        val seatSelectRequest: SeatSelectRequest = SeatSelectRequest(
+            seatNumber = 1
+        )
+        serverManagement.seatSelectCommunication(seatSelectRequest)
+
+        val mockSaveLeftTime: SaveLeftTime = SaveLeftTime(
+            leftTime = 100
+        )
+
+        val saveTimeResponse: SaveLeftTimeResponse = serverManagement.saveLeftTimeCommunication(mockSaveLeftTime)
+        assertThat(saveTimeResponse.leaderBoardList[0].totalStudyTime).isEqualTo(60*60*3 - mockSaveLeftTime.leftTime)
+    }
 }
