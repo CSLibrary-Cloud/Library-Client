@@ -67,9 +67,9 @@ class ServerManagementTest {
         )
         serverManagement.loginCommunication(loginRequest)
 
-        val seatResponse: List<SeatResponse> = serverManagement.getSeatInformation()
+        val seatResponse: List<SeatResponse>? = serverManagement.getSeatInformation()
 
-        assertThat(seatResponse.size).isEqualTo(30)
+        assertThat(seatResponse?.size).isEqualTo(30)
     }
 
     @Test

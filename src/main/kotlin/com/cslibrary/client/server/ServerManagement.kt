@@ -4,6 +4,7 @@ import com.cslibrary.client.configuration.ServerConfiguration
 import com.cslibrary.client.data.request.*
 import com.cslibrary.client.data.response.*
 import com.cslibrary.library.error.ErrorResponse
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -42,12 +43,14 @@ class ServerManagement (
         return loginResponse
     }
 
-    fun getSeatInformation(): List<SeatResponse> {
+    fun getSeatInformation(): List<SeatResponse>? {
         val httpEntity: HttpEntity<Void> = getHttpEntityWithToken(null)
-        val seatResponse: ResponseEntity<List<SeatResponse>> =
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
             restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/seat", HttpMethod.GET, httpEntity)
+        } ?: return null
 
-        return seatResponse.body!!
+        val mapper = jacksonObjectMapper()
+        return mapper.readValue(response.body, object : TypeReference<List<SeatResponse>>() {})
     }
 
     //selecting seat
