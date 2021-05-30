@@ -14,9 +14,11 @@ class Seat (
     val scanner: Scanner = Scanner(System.`in`)
 
     fun showSeat() {
-        val seatResponse : List<SeatResponse> = serverManagement.getSeatInformation()
-        if(seatResponse.isNotEmpty()){
-            shape.makeSeat(seatResponse)
+        val seatResponse : List<SeatResponse>? = serverManagement.getSeatInformation()
+        if(seatResponse?.isNotEmpty() == true){
+            if (seatResponse != null) {
+                shape.makeSeat(seatResponse)
+            }
         }
 
         print("Press Enter to go back")
