@@ -77,37 +77,18 @@ class ServerManagement (
         return mapper.readValue(response.body, SeatSelectResponse::class.java)
     }
 
-    fun stateCommunication(stateChangeRequest: StateChangeRequest) : Void? {
+    fun stateCommunication(stateChangeRequest: StateChangeRequest) {
         val httpEntity: HttpEntity<StateChangeRequest> = getHttpEntityWithToken(stateChangeRequest)
-        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
+        val response: ResponseEntity<String>? = getResponseEntityInStringFormat {
             restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/state", HttpMethod.PUT, httpEntity)
-        } ?: return null
-
-        val mapper = jacksonObjectMapper()
-
-        return mapper.readValue(response.body, Void::class.java)
+        }
     }
 
-    fun reportCommunication(reportRequest: ReportRequest) : Void? {
+    fun reportCommunication(reportRequest: ReportRequest) {
         val httpEntity: HttpEntity<ReportRequest> = getHttpEntityWithToken(reportRequest)
-        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
+        val response: ResponseEntity<String>? = getResponseEntityInStringFormat {
             restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/report", HttpMethod.POST, httpEntity)
-        } ?: return null
-
-        val mapper = jacksonObjectMapper()
-
-        return mapper.readValue(response.body, Void::class.java)
-    }
-
-    fun extendTimeCommunication() : Void? {
-        val httpEntity: HttpEntity<Void> = getHttpEntityWithToken(null)
-        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
-            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/extend", HttpMethod.POST, httpEntity)
-        } ?: return null
-
-        val mapper = jacksonObjectMapper()
-
-        return mapper.readValue(response.body, Void::class.java)
+        }
     }
 
     fun saveLeftTimeCommunication(saveLeftTime: SaveLeftTime) : SaveLeftTimeResponse? {

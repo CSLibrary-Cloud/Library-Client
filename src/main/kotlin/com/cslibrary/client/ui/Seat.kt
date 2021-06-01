@@ -1,6 +1,10 @@
 package com.cslibrary.client.ui
 
+import com.cslibrary.client.data.request.SeatSelectRequest
+import com.cslibrary.client.data.response.SaveLeftTimeResponse
 import com.cslibrary.client.data.response.SeatResponse
+import com.cslibrary.client.data.response.SeatSelectResponse
+import com.cslibrary.client.data.response.UserLeftTimeResponse
 import com.cslibrary.client.server.ServerManagement
 import org.springframework.stereotype.Component
 import java.util.*
@@ -13,37 +17,52 @@ class Seat (
 
     val scanner: Scanner = Scanner(System.`in`)
 
-    fun showSeat() {
+    private fun showSeatAsUI(): Boolean {
         val seatResponse : List<SeatResponse>? = serverManagement.getSeatInformation()
-        if(seatResponse?.isNotEmpty() == true){
-            if (seatResponse != null) {
-                shape.makeSeat(seatResponse)
-            }
+        return if(seatResponse?.isNotEmpty() == true){
+            shape.makeSeat(seatResponse)
+            true
+        } else {
+            false
         }
+    }
 
-        print("Press Enter to go back")
+    fun showSeat() {
+        if (!showSeatAsUI()) return
+println("Press enter key to continue..")
         scanner.nextLine()
     }
 
-    fun chooseSeat(n : Int) {
-        showSeat()
-        while (true) {
-            print("Choose the Seat Number : ")
-            val num = scanner.next()
-            println("Choosed $num")
-            num?.let {
-                //선택 좌석 서버 전달
-
-                if(n==2){
-                    //좌석 선택
-                }
-                else if(n==3){
-                    //좌석 수정
-                }
-            }
-            if (num == null) {
-                print("좌석 입력을 하지 않았습니다. 다시 입력해주세요.")
-            }
+    fun changeSeat() {
+        val inputNumber: Int = chooseSeatInput() ?: run {
+            println("입력이 잘못 되었습니다.")
+            return
         }
+        serverManagement.seatChangeCommunication(SeatSelectRequest(inputNumber-1))
+    }
+
+    fun reserveSeat(): UserLeftTimeResponse? {
+        val inputNumber: Int = chooseSeatInput() ?: run {
+            println("입력이 잘못 되었습니다.")
+            return null
+        }
+
+        return serverManagement.seatSelectCommunication(SeatSelectRequest(inputNumber-1))
+    }
+
+
+    // isSeatSelect == true -> 좌석 선택, false이면 좌석 수정
+    private fun chooseSeatInput(): Int? {
+        if (!showSeatAsUI()) return null
+
+        print("Choose the Seat Number : ")
+        val num: String = scanner.nextLine() ?: return null
+        return convertStringToInt(num) ?: return null
+    }
+
+    private fun convertStringToInt(target: String): Int? {
+        return runCatching {
+            target.toInt()
+        }.getOrNull()
     }
 }

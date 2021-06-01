@@ -1,14 +1,18 @@
 package com.cslibrary.client.ui
 
+import com.cslibrary.client.data.request.ReportRequest
+import com.cslibrary.client.server.ServerManagement
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.annotation.PostConstruct
+import kotlin.system.exitProcess
 
 @Component
 class MainPage(
     private val shape: Shape,
     private val login: Login,
     private val register: Register,
+    private val serverManagement: ServerManagement
 ) {
 
     @PostConstruct
@@ -24,9 +28,9 @@ class MainPage(
         while(true){
             shape.makeRec(5,"Library System")
             shape.makeRec(3, "Main Page")
-            println("1. Login\n2. Register\n3. Finish")
+            println("1. Login\n2. Register\n3. Report User\n4. Finish")
             print("Choose the number : ")
-            val ch = scanner.next()
+            val ch = scanner.nextLine()
             when(ch!!) {
                 "1" -> {
                     println("Login Selected")
@@ -37,8 +41,16 @@ class MainPage(
                     register.registerUser()
                 }
                 "3"->{
+                    shape.makeRec(3,"Report User")
+                    println("| Message Title")
+                    val title = scanner.nextLine()
+                    println("| Message")
+                    val message = scanner.nextLine()
+                    serverManagement.reportCommunication(ReportRequest(message))
+                }
+                "4"->{
                     println("Finished")
-                    return
+                    break
                 }
                 null ->{
                     println("다시 입력해주세요.")
