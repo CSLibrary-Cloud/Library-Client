@@ -38,4 +38,23 @@ class Shape {
         }
         print("\n")
     }
+
+    fun makeTime(t : Int){
+        //남은 시간 가져오기
+        println("\n\nLeft Time : $t\n")
+    }
+
+    fun makeLeaderBoard(num : Int){
+
+        if(num == 1){
+           //리더보드 갱신
+
+        }
+        println("---------------------------\n")
+        //리더보드 출력
+        println("Leader Board : B\n")
+        println("--------------------------\n")
+
+    }
+
 }
