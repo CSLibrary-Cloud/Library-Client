@@ -25,10 +25,8 @@ class Seat (
         scanner.nextLine()
     }
 
-    fun chooseSeat() {
-
+    fun chooseSeat(n : Int) {
         showSeat()
-
         while (true) {
             print("Choose the Seat Number : ")
             val num = scanner.next()
@@ -36,6 +34,12 @@ class Seat (
             num?.let {
                 //선택 좌석 서버 전달
 
+                if(n==2){
+                    //좌석 선택
+                }
+                else if(n==3){
+                    //좌석 수정
+                }
             }
             if (num == null) {
                 print("좌석 입력을 하지 않았습니다. 다시 입력해주세요.")
