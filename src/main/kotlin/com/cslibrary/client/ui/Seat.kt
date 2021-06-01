@@ -2,8 +2,10 @@ package com.cslibrary.client.ui
 
 import com.cslibrary.client.data.response.SeatResponse
 import com.cslibrary.client.server.ServerManagement
+import org.springframework.stereotype.Component
 import java.util.*
 
+@Component
 class Seat (
     private val shape: Shape,
     private val serverManagement: ServerManagement
@@ -12,9 +14,11 @@ class Seat (
     val scanner: Scanner = Scanner(System.`in`)
 
     fun showSeat() {
-        val seatResponse : List<SeatResponse> = serverManagement.getSeatInformation()
-        if(seatResponse.isNotEmpty()){
-            shape.makeSeat(seatResponse)
+        val seatResponse : List<SeatResponse>? = serverManagement.getSeatInformation()
+        if(seatResponse?.isNotEmpty() == true){
+            if (seatResponse != null) {
+                shape.makeSeat(seatResponse)
+            }
         }
 
         print("Press Enter to go back")

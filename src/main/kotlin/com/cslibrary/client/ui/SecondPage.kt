@@ -1,7 +1,9 @@
 package com.cslibrary.client.ui
 
+import org.springframework.stereotype.Component
 import java.util.*
 
+@Component
 class SecondPage (
     private val shape : Shape,
     private val seat : Seat,

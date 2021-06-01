@@ -1,19 +1,17 @@
 package com.cslibrary.client.server
 
 import com.cslibrary.client.configuration.ServerConfiguration
-import com.cslibrary.client.data.request.LoginRequest
-import com.cslibrary.client.data.request.RegisterRequest
-import com.cslibrary.client.data.response.LoginResponse
-import com.cslibrary.client.data.response.RegisterResponse
-import com.cslibrary.client.data.response.SeatResponse
+import com.cslibrary.client.data.request.*
+import com.cslibrary.client.data.response.*
+import com.cslibrary.library.error.ErrorResponse
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.exchange
-import org.springframework.web.client.postForEntity
+import org.springframework.web.client.*
 
 @Component
 class ServerManagement (
@@ -23,25 +21,105 @@ class ServerManagement (
     // Login token storage
     private var loginToken: String? = null
 
-    fun signUpCommunication(registerRequest: RegisterRequest) : RegisterResponse {
-        val registerResponse: ResponseEntity<RegisterResponse> =
+    // Exception will be added later
+    fun signUpCommunication(registerRequest: RegisterRequest): RegisterResponse? {
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
             restTemplate.postForEntity("${serverConfiguration.serverBaseAddress}/api/v1/user", registerRequest)
-        return registerResponse.body!!
+        } ?: return null
+
+        val mapper = jacksonObjectMapper()
+
+        return mapper.readValue(response.body, RegisterResponse::class.java)
     }
 
-    fun loginCommunication(loginRequest: LoginRequest) : LoginResponse {
-        val loginResponse: ResponseEntity<LoginResponse> =
+    // Exception will be added later
+    fun loginCommunication(loginRequest: LoginRequest) : LoginResponse? {
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
             restTemplate.postForEntity("${serverConfiguration.serverBaseAddress}/api/v1/login", loginRequest, LoginResponse::class)
-        loginToken = loginResponse.body!!.userToken
-        return loginResponse.body!!
+        } ?: return null
+
+        val loginResponse: LoginResponse = jacksonObjectMapper().readValue(response.body, LoginResponse::class.java)
+        loginToken = loginResponse.userToken
+        return loginResponse
     }
 
-    fun getSeatInformation(): List<SeatResponse> {
+    fun getSeatInformation(): List<SeatResponse>? {
         val httpEntity: HttpEntity<Void> = getHttpEntityWithToken(null)
-        val seatResponse: ResponseEntity<List<SeatResponse>> =
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
             restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/seat", HttpMethod.GET, httpEntity)
+        } ?: return null
 
-        return seatResponse.body!!
+        val mapper = jacksonObjectMapper()
+        return mapper.readValue(response.body, object : TypeReference<List<SeatResponse>>() {})
+    }
+
+    //selecting seat
+    fun seatSelectCommunication(seatSelectRequest: SeatSelectRequest) : UserLeftTimeResponse? {
+        val httpEntity: HttpEntity<SeatSelectRequest> = getHttpEntityWithToken(seatSelectRequest)
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat{
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/seat", HttpMethod.POST, httpEntity)
+        } ?: return null
+
+        val mapper = jacksonObjectMapper()
+
+        //reservedSeat 와 leftTime 정보가 있을 것입니다.
+        return mapper.readValue(response.body, UserLeftTimeResponse::class.java)
+    }
+
+    fun seatChangeCommunication(seatSelectRequest: SeatSelectRequest) : SeatSelectResponse? {
+        val httpEntity: HttpEntity<SeatSelectRequest> = getHttpEntityWithToken(seatSelectRequest)
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/seat", HttpMethod.PUT, httpEntity)
+        } ?: return null
+
+        val mapper = jacksonObjectMapper()
+
+        return mapper.readValue(response.body, SeatSelectResponse::class.java)
+    }
+
+    fun stateCommunication(stateChangeRequest: StateChangeRequest) : Void? {
+        val httpEntity: HttpEntity<StateChangeRequest> = getHttpEntityWithToken(stateChangeRequest)
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/state", HttpMethod.PUT, httpEntity)
+        } ?: return null
+
+        val mapper = jacksonObjectMapper()
+
+        return mapper.readValue(response.body, Void::class.java)
+    }
+
+    fun reportCommunication(reportRequest: ReportRequest) : Void? {
+        val httpEntity: HttpEntity<ReportRequest> = getHttpEntityWithToken(reportRequest)
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/report", HttpMethod.POST, httpEntity)
+        } ?: return null
+
+        val mapper = jacksonObjectMapper()
+
+        return mapper.readValue(response.body, Void::class.java)
+    }
+
+    fun extendTimeCommunication() : Void? {
+        val httpEntity: HttpEntity<Void> = getHttpEntityWithToken(null)
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/extend", HttpMethod.POST, httpEntity)
+        } ?: return null
+
+        val mapper = jacksonObjectMapper()
+
+        return mapper.readValue(response.body, Void::class.java)
+    }
+
+    fun saveLeftTimeCommunication(saveLeftTime: SaveLeftTime) : SaveLeftTimeResponse? {
+        val httpEntity: HttpEntity<SaveLeftTime> = getHttpEntityWithToken(saveLeftTime)
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/user/time", HttpMethod.POST, httpEntity)
+        } ?: return null
+
+        // it has leaderBoardList & userNotification List
+        val mapper = jacksonObjectMapper()
+
+        return mapper.readValue(response.body, SaveLeftTimeResponse::class.java)
     }
 
     /**
@@ -55,5 +133,37 @@ class ServerManagement (
         }
 
         return HttpEntity(httpBody, httpHeaders)
+    }
+
+    fun getResponseEntityInStringFormat(toExecute: () -> ResponseEntity<String>): ResponseEntity<String>? {
+        return try {
+            toExecute()
+        } catch (resourceAccessException: ResourceAccessException) {
+            print("Error communicating with server. Check server address and internet connection.")
+            return null
+        } catch (httpClientErrorException: HttpClientErrorException) {
+            handleServerClientError(httpClientErrorException)
+            return null
+        } catch (httpServerErrorException: HttpServerErrorException) {
+            handleServerClientError(httpServerErrorException)
+            return null
+        }
+    }
+
+    fun handleServerClientError(httpStatusCodeException: HttpStatusCodeException) {
+        // With 4xx Codes!
+        val body: String = httpStatusCodeException.responseBodyAsString
+
+        // meaning error!
+        val errorResponse: ErrorResponse = runCatching {
+            jacksonObjectMapper().readValue(body, ErrorResponse::class.java)
+        }.onFailure { innerIt ->
+            // If body type is NOT matching with errorResponse
+            print("Exception Occurred!")
+            print(innerIt.message ?: "No message available") // errorMessage print 는 client ui 에서 적절히 표시 필요
+        }.getOrNull() ?: return
+
+        print("Server responded with: ${errorResponse.statusCode} - ${errorResponse.statusMessage}")
+        print("Message is: ${errorResponse.errorMessage}") // errorMessage print 는 client ui 에서 적절히 표시 필요
     }
 }
