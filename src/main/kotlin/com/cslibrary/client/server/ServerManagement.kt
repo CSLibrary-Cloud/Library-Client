@@ -144,7 +144,7 @@ class ServerManagement (
             print(innerIt.message ?: "No message available") // errorMessage print 는 client ui 에서 적절히 표시 필요
         }.getOrNull() ?: return
 
-        print("Server responded with: ${errorResponse.statusCode} - ${errorResponse.statusMessage}")
-        print("Message is: ${errorResponse.errorMessage}") // errorMessage print 는 client ui 에서 적절히 표시 필요
+        println("Server responded with: ${errorResponse.statusCode} - ${errorResponse.statusMessage}")
+        println("Message is: ${errorResponse.errorMessage}") // errorMessage print 는 client ui 에서 적절히 표시 필요
     }
 }
