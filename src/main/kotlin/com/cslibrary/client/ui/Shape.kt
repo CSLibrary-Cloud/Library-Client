@@ -8,6 +8,7 @@ class Shape {
 
     fun makeRec(num : Int, str : String){
 
+        print("\n\n")
         for (i in 0..num*2){
             print("-- ")
         }

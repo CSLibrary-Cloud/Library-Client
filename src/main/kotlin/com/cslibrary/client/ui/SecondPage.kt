@@ -1,7 +1,6 @@
 package com.cslibrary.client.ui
 
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class SecondPage (
@@ -9,12 +8,15 @@ class SecondPage (
     private val seat : Seat,
 ){
     fun secondPage(){
-        val scanner : Scanner = Scanner(System.`in`)
         val realtime = RealTimePage(shape,seat)
         shape.makeRec(3, "Select Seat")
         seat.chooseSeat(2)
         val time = 3
-        realtime.realtime()
-        return
+
+        var num : Int = 1
+        while(true){
+            num = realtime.realtime()
+            if(num == 2) break
+        }
     }
 }

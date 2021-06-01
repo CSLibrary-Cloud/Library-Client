@@ -11,7 +11,7 @@ class ThirdPage(
         while(true){
             shape.makeRec(3, "Third Page")
             println("1. Show Seat\n2. Change Seat\n3.Report User\n4.Extend Time\n5.Timer & LeaderBoard\n6.Main Page")
-            print("Choose the number : ")
+            print("\nChoose the number : ")
             when(sc.next()) {
                 "1" -> {
                     println("Show Seat Selected")
