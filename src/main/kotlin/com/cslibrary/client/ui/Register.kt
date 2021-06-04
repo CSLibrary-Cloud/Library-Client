@@ -14,6 +14,7 @@ class Register(
     fun registerUser(){
 
         while(true){
+            clearScreen()
             shape.makeRec(3,"Register Page")
             println("Enter your Info")
             print("ID : ")
@@ -39,12 +40,17 @@ class Register(
                     )
                 )
 
-                //response 로 받은 id
-                println("Successfully registered with: ${registerResponse?.registeredId}")
-
-                break
+                if (registerResponse?.registeredId!!.isNotEmpty()) {
+                    println("Successfully registered with: ${registerResponse?.registeredId}")
+                }else{
+                    println("Register Failed!\nGoind back to Main Page")
+                    return
+                }
             }
-
         }
+    }
+    private fun clearScreen() {
+        print("\u001B[H\u001B[2J")
+        System.out.flush()
     }
 }

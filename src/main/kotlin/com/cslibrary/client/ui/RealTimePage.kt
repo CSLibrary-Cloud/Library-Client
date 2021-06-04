@@ -86,6 +86,7 @@ class RealTimePage (
             }
 
             while(true){
+                clearScreen()
                 shape.makeRec(3,"Pause Page")
                 println("""
                     |1. 계속 공부

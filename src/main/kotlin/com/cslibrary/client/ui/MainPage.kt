@@ -26,6 +26,7 @@ class MainPage(
 
         val scanner : Scanner = Scanner(System.`in`)
         while(true){
+            clearScreen()
             shape.makeRec(5,"Library System")
             shape.makeRec(3, "Main Page")
             println("1. Login\n2. Register\n3. Report User\n4. Finish")
@@ -47,6 +48,7 @@ class MainPage(
                     println("| Message")
                     val message = scanner.nextLine()
                     serverManagement.reportCommunication(ReportRequest(message))
+                    println("Sucessfully Reported!!")
                 }
                 "4"->{
                     println("Finished")
@@ -57,5 +59,10 @@ class MainPage(
                 }
             }
         }
+    }
+
+    private fun clearScreen() {
+        print("\u001B[H\u001B[2J")
+        System.out.flush()
     }
 }

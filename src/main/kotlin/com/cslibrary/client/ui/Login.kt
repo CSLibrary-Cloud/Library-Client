@@ -15,7 +15,7 @@ class Login(
     fun loginUser() {
 
         while (true) {
-
+            clearScreen()
             shape.makeRec(3, "Login Page")
             print("ID : ")
             val userId: String = readLine()!!
@@ -38,9 +38,17 @@ class Login(
                 if (loginResponse?.userToken!!.isNotEmpty()) {
                     println("Successfully Logged-In!")
                     secondPage.secondPage()
+                    return
+                }else{
+                    println("Login Failed!\nGoing back to Main Page")
+                    return
                 }
-                break
             }
         }
+    }
+
+    private fun clearScreen() {
+        print("\u001B[H\u001B[2J")
+        System.out.flush()
     }
 }
