@@ -39,6 +39,8 @@ class RealTimePage (
                         SaveLeftTime(leftTimeGlobal)
                     )!!
                 }
+            } else {
+                shape.makeLeaderBoard(null)
             }
             cnt++
             leftTimeGlobal--
