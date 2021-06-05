@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component
 @Component
 class Shape {
 
+    private var saveLeftTimeResponse: SaveLeftTimeResponse? = null
+
     fun makeRec(num : Int, str : String){
 
         print("\n")
@@ -47,21 +49,24 @@ class Shape {
         println("\n\nLeft Time : $t\n")
     }
 
-    fun makeLeaderBoard(invokeUpdate: (()-> SaveLeftTimeResponse)){
-        val saveLeftTimeResponse: SaveLeftTimeResponse = invokeUpdate.invoke()
+    fun makeLeaderBoard(invokeUpdate: (()-> SaveLeftTimeResponse)? = null){
+        if (invokeUpdate != null) {
+            saveLeftTimeResponse = invokeUpdate.invoke()
+        }
         println("---------------------------\n")
         //리더보드 출력
-        saveLeftTimeResponse.leaderBoardList.forEach {
+        saveLeftTimeResponse?.leaderBoardList?.forEach {
             println(
                 """
                     |Rank: ${it.rank}
                     |User Name: ${it.userName}
-                    |Study Time: ${it.totalStudyTime}\n
+                    |Study Time: ${it.totalStudyTime}
+                    |
                 """.trimMargin()
             )
         }
         println("--------------------------\n")
-        saveLeftTimeResponse.userNotificationList.forEach {
+        saveLeftTimeResponse?.userNotificationList?.forEach {
             println(
                 """
                     |Notification: ${it.notificationTitle}
