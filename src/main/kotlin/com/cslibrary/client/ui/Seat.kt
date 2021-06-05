@@ -19,11 +19,18 @@ class Seat (
 
     private fun showSeatAsUI(): Boolean {
         val seatResponse : List<SeatResponse>? = serverManagement.getSeatInformation()
-        return if(seatResponse?.isNotEmpty() == true){
+
+        if(seatResponse == null){
+            println("Get Seat Information Failed!\nGoing back to Main Page")
+            return false
+        }
+
+        return if(seatResponse.isNotEmpty()){
             shape.makeSeat(seatResponse)
             true
         } else {
-            false
+            println("Get Seat Information Failed!\nGoing back to Main Page")
+            return false
         }
     }
 

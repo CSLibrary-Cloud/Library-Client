@@ -34,19 +34,25 @@ class Login(
                     )
                 )
 
-                //response로 받은 token
-                if (loginResponse?.userToken!!.isNotEmpty()) {
-                    println("Successfully Logged-In!")
-                    secondPage.secondPage()
-                    return
-                }else{
+                if(loginResponse == null){
                     println("Login Failed!\nGoing back to Main Page")
                     return
+                }
+
+                //response로 받은 token
+                else {
+                    if (loginResponse.userToken.isNotEmpty()) {
+                        println("Successfully Logged-In!")
+                        secondPage.secondPage()
+                        return
+                    }else{
+                        println("Login Failed!\nGoing back to Main Page")
+                        return
+                    }
                 }
             }
         }
     }
-
     private fun clearScreen() {
         print("\u001B[H\u001B[2J")
         System.out.flush()

@@ -34,6 +34,21 @@ class RealTimePage (
 
             if (cnt % 5 == 0) {
                 //5초마다 갱신
+
+                val response = serverManagement.saveLeftTimeCommunication(SaveLeftTime(leftTimeGlobal))
+
+                if(response==null){
+                    println("LeaderBoard Failed.\nGoing back to Main Page")
+                    println("\nPress enter key to continue..")
+                    flag = false
+                    serverManagement.stateCommunication(
+                        StateChangeRequest(
+                            "exit"
+                        )
+                    )
+                    cancel()
+                }
+
                 shape.makeLeaderBoard {
                     serverManagement.saveLeftTimeCommunication(
                         SaveLeftTime(leftTimeGlobal)
