@@ -1,6 +1,7 @@
 package com.cslibrary.client.ui
 
 import com.cslibrary.client.data.response.UserLeftTimeResponse
+import com.cslibrary.client.io.MainIO
 import org.springframework.stereotype.Component
 
 @Component
@@ -10,22 +11,22 @@ class SecondPage (
     private val realTimePage: RealTimePage
 ){
     fun secondPage(){
-        clearScreen()
+        MainIO.clearScreen()
         shape.makeRec(3, "Select Seat")
-        val userLeftTimeResponse: UserLeftTimeResponse = seat.reserveSeat() ?: run{
+        val userLeftTimeResponse: UserLeftTimeResponse = seat.reserveSeat() ?: run {
+            MainIO.printError("Cannot reserve seat!")
             return
         }
-        println("Seat Reserved: ${userLeftTimeResponse.reservedSeat.reservedSeatNumber+1}")
+        MainIO.printNormal("Seat Reserved: ${userLeftTimeResponse.reservedSeat.reservedSeatNumber+1}")
 
         var num : Int = 1
         while(true){
-            num = realTimePage.realtime(userLeftTimeResponse.leftTime)
+            num = runCatching {
+                realTimePage.realtime(userLeftTimeResponse.leftTime)
+            }.getOrElse {
+                return
+            }
             if(num == 2) break
         }
-    }
-
-    private fun clearScreen() {
-        print("\u001B[H\u001B[2J")
-        System.out.flush()
     }
 }

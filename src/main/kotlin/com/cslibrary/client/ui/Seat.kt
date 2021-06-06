@@ -5,6 +5,7 @@ import com.cslibrary.client.data.response.SaveLeftTimeResponse
 import com.cslibrary.client.data.response.SeatResponse
 import com.cslibrary.client.data.response.SeatSelectResponse
 import com.cslibrary.client.data.response.UserLeftTimeResponse
+import com.cslibrary.client.io.MainIO
 import com.cslibrary.client.server.ServerManagement
 import org.springframework.stereotype.Component
 import java.util.*
@@ -15,15 +16,10 @@ class Seat (
     private val serverManagement: ServerManagement
 ) {
 
-    val scanner: Scanner = Scanner(System.`in`)
-
     private fun showSeatAsUI(): Boolean {
-        val seatResponse : List<SeatResponse>? = serverManagement.getSeatInformation()
-
-        if(seatResponse == null){
-            println("Get Seat Information Failed!\nGoing back to Main Page")
-            println("\nPress enter key to continue..")
-            scanner.nextLine()
+        val seatResponse : List<SeatResponse> = serverManagement.getSeatInformation() ?: run {
+            MainIO.printError("Get Seat Information Failed!\nGoing back to Main Page")
+            MainIO.waitFor()
             return false
         }
 
@@ -31,18 +27,16 @@ class Seat (
             shape.makeSeat(seatResponse)
             true
         } else {
-            println("Get Seat Information Failed!\nGoing back to Main Page")
-            println("\nPress enter key to continue..")
-            scanner.nextLine()
+            MainIO.printError("Get Seat Information Failed!\nGoing back to Main Page")
+            MainIO.waitFor()
             return false
         }
     }
 
     fun changeSeat() {
         val inputNumber: Int = chooseSeatInput() ?: run {
-            println("null Input\nFailed to change seat!")
-            println("\nPress enter key to continue..")
-            scanner.nextLine()
+            MainIO.printError("null Input\nFailed to change seat!")
+            MainIO.waitFor()
             return
         }
         serverManagement.seatChangeCommunication(SeatSelectRequest(inputNumber-1))
@@ -50,9 +44,8 @@ class Seat (
 
     fun reserveSeat(): UserLeftTimeResponse? {
         val inputNumber: Int = chooseSeatInput() ?: run {
-            print("Fail to select Seat!\nGoing back to Main Page")
-            println("\nPress enter key to continue..")
-            scanner.nextLine()
+            MainIO.printError("Fail to select Seat!\nGoing back to Main Page")
+            MainIO.waitFor()
             return null
         }
 
@@ -63,10 +56,7 @@ class Seat (
     // isSeatSelect == true -> 좌석 선택, false이면 좌석 수정
     private fun chooseSeatInput(): Int? {
         if (!showSeatAsUI()) return null
-
-        print("Choose the Seat Number : ")
-        val num: String = scanner.nextLine() ?: return null
-        return convertStringToInt(num) ?: return null
+        return convertStringToInt(MainIO.getInputNormal("Choose the Seat Number: "))
     }
 
     private fun convertStringToInt(target: String): Int? {

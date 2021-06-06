@@ -1,6 +1,7 @@
 package com.cslibrary.client.ui
 
 import com.cslibrary.client.data.request.ReportRequest
+import com.cslibrary.client.io.MainIO
 import com.cslibrary.client.server.ServerManagement
 import org.springframework.stereotype.Component
 import java.util.*
@@ -18,51 +19,48 @@ class MainPage(
     @PostConstruct
     fun initiateMainApplication() {
         if (System.getProperty("kdr.isTesting") != "test") {
+            MainIO.initIO()
             mainPage()
         }
     }
 
     private fun mainPage() {
-
-        val scanner : Scanner = Scanner(System.`in`)
         while(true){
-            clearScreen()
+            MainIO.clearScreen()
             shape.makeRec(5,"Library System")
             shape.makeRec(3, "Main Page")
-            println("1. Login\n2. Register\n3. Report User\n4. Finish")
-            print("Choose the number : ")
-            val ch = scanner.nextLine()
-            when(ch) {
+            MainIO.printNormal(
+                """
+                    |1. Login
+                    |2. Register
+                    |3. Report User
+                    |4. Finish
+                """.trimMargin()
+            )
+            when(MainIO.getInputNormal("Choose the number : ")) {
                 "1" -> {
-                    println("Login Selected")
+                    MainIO.printNormal("Login Selected")
                     login.loginUser()
                 }
                 "2"->{
-                    println("Register Selected")
+                    MainIO.printNormal("Register Selected")
                     register.registerUser()
                 }
                 "3"->{
                     shape.makeRec(3,"Report User")
-                    println("| Message Title")
-                    val title = scanner.nextLine()
-                    println("| Message")
-                    val message = scanner.nextLine()
+                    val title: String = MainIO.getInputNormal("| Message Title: ")
+                    val message: String = MainIO.getInputNormal("| Message: ")
                     serverManagement.reportCommunication(ReportRequest(message))
-                    println("Sucessfully Reported!!")
+                    MainIO.printNormal("Successfully Reported!!")
                 }
                 "4"->{
-                    println("Finished")
+                    MainIO.printNormal("Finished")
                     break
                 }
-                null ->{
-                    println("다시 입력해주세요.")
+                else ->{
+                    MainIO.printNormal("다시 입력해주세요.")
                 }
             }
         }
-    }
-
-    private fun clearScreen() {
-        print("\u001B[H\u001B[2J")
-        System.out.flush()
     }
 }

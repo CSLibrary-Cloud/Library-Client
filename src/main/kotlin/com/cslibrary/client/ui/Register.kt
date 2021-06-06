@@ -2,6 +2,7 @@ package com.cslibrary.client.ui
 
 import com.cslibrary.client.data.request.RegisterRequest
 import com.cslibrary.client.data.response.RegisterResponse
+import com.cslibrary.client.io.MainIO
 import com.cslibrary.client.server.ServerManagement
 import org.springframework.stereotype.Component
 import java.util.*
@@ -11,57 +12,74 @@ class Register(
     private val shape: Shape,
     private val serverManagement: ServerManagement
 ) {
-    val scanner: Scanner = Scanner(System.`in`)
+    private val passwordRegex: Regex = """^(?=.*[@#$%!\-_?&])(?=\S+$).*""".toRegex()
+    private val phoneRegex: Regex = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$".toRegex()
+
     fun registerUser(){
+        MainIO.clearScreen()
+        shape.makeRec(3,"Register Page")
+        MainIO.printNormal("Enter your information")
 
-        while(true){
-            clearScreen()
-            shape.makeRec(3,"Register Page")
-            println("Enter your Info")
-            print("ID : ")
-            val userId: String = readLine()!!
-            print("Password : ")
-            val userPassword: String = readLine()!!
-            print("userName : ")
-            val userName: String = readLine()!!
-            print("PhoneNumber : ")
-            val userPhoneNumber: String = readLine()!!
-
-            if(userId == null || userPassword == null || userName == null || userPhoneNumber == null){
-                print("입력이 되지 않았습니다. 다시 입력해주세요.")
-            }
-            else{
-                // Register 하기
-                val registerResponse: RegisterResponse? = serverManagement.signUpCommunication(
-                    RegisterRequest(
-                        userId = userId,
-                        userPassword = userPassword,
-                        userName = userName,
-                        userPhoneNumber = userPhoneNumber
-                    )
-                )
-
-                if(registerResponse == null){
-                    println("Register Failed!\nGoing back to Main Page")
-                    println("\nPress enter key to continue..")
-                    scanner.nextLine()
-                    return
-                }
-
-                if (registerResponse?.registeredId!!.isNotEmpty()) {
-                    println("Successfully registered with: ${registerResponse?.registeredId}")
-                    return
-                }else{
-                    println("Register Failed!\nGoind back to Main Page")
-                    println("\nPress enter key to continue..")
-                    scanner.nextLine()
-                    return
-                }
-            }
+        // Register 하기
+        (serverManagement.signUpCommunication(getRegisterRequest()) ?: run {
+            MainIO.printError("Register Failed!\nGoing back to Main Page")
+            MainIO.waitFor()
+            return
+        }).also {
+            MainIO.printNormal("Successfully registered with: ${it.registeredId}")
+            MainIO.waitFor()
         }
     }
-    private fun clearScreen() {
-        print("\u001B[H\u001B[2J")
-        System.out.flush()
+
+    // Get Input for register and return registerRequest
+    private fun getRegisterRequest(): RegisterRequest {
+        val userId: String = getUserAndValidateInput({MainIO.getInputNormal("ID: ")})
+        val userPassword: String = getUserAndValidateInput(
+            toExecute = {MainIO.getInputPassword("Password: ")},
+            additionalStep = { inputString ->
+                (inputString.length >= 8) && (passwordRegex.matches(inputString))
+            },
+            message = "Wrong PW Input: Password length should be >=8 and should contains at least one or more special letters."
+        )
+        val userName: String = getUserAndValidateInput({MainIO.getInputNormal("User Name: ")})
+        val userPhoneNumber: String = getUserAndValidateInput(
+            toExecute = {MainIO.getInputNormal("Phone Number: ")},
+            additionalStep = { inputString ->
+                phoneRegex.matches(inputString)
+            },
+            message = "Wrong Phone Number input. For example, input like: 010-xxxx-xxxx"
+        )
+
+        return RegisterRequest(
+            userId = userId,
+            userPassword = userPassword,
+            userName = userName,
+            userPhoneNumber = userPhoneNumber
+        )
+    }
+
+    // Input and validate
+    private fun getUserAndValidateInput(toExecute: () -> String, additionalStep: ((String) -> Boolean)? = null, message: String = "Wrong Input."): String {
+        var userId: String
+        do {
+            userId = toExecute()
+        } while (!inputValidation(userId, additionalStep = additionalStep, message = message))
+
+        return userId
+    }
+
+    // True when passed
+    private fun inputValidation(
+        input: String,
+        additionalStep: ((String) -> Boolean)? = null,
+        message: String = "Wrong Input."
+    ): Boolean {
+        val additionalBoolean: Boolean = additionalStep?.invoke(input) ?: true
+        val condition: Boolean = (additionalBoolean) && (input.isNotEmpty())
+
+        if (!condition) {
+            MainIO.printError(message)
+        }
+        return condition
     }
 }
