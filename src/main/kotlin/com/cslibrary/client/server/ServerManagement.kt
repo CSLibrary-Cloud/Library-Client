@@ -3,6 +3,7 @@ package com.cslibrary.client.server
 import com.cslibrary.client.configuration.ServerConfiguration
 import com.cslibrary.client.data.request.*
 import com.cslibrary.client.data.response.*
+import com.cslibrary.client.io.MainIO
 import com.cslibrary.library.error.ErrorResponse
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -120,7 +121,7 @@ class ServerManagement (
         return try {
             toExecute()
         } catch (resourceAccessException: ResourceAccessException) {
-            print("Error communicating with server. Check server address and internet connection.")
+            MainIO.printError("Error communicating with server. Check server address and internet connection.")
             return null
         } catch (httpClientErrorException: HttpClientErrorException) {
             handleServerClientError(httpClientErrorException)
@@ -140,11 +141,11 @@ class ServerManagement (
             jacksonObjectMapper().readValue(body, ErrorResponse::class.java)
         }.onFailure { innerIt ->
             // If body type is NOT matching with errorResponse
-            print("Exception Occurred!")
-            print(innerIt.message ?: "No message available") // errorMessage print 는 client ui 에서 적절히 표시 필요
+            MainIO.printError("Exception Occurred!")
+            MainIO.printError(innerIt.message ?: "No message available")
         }.getOrNull() ?: return
 
-        println("Server responded with: ${errorResponse.statusCode} - ${errorResponse.statusMessage}")
-        println("Message is: ${errorResponse.errorMessage}") // errorMessage print 는 client ui 에서 적절히 표시 필요
+        MainIO.printError("Server responded with: ${errorResponse.statusCode} - ${errorResponse.statusMessage}")
+        MainIO.printError("Message is: ${errorResponse.errorMessage}") // errorMessage print 는 client ui 에서 적절히 표시 필요
     }
 }
