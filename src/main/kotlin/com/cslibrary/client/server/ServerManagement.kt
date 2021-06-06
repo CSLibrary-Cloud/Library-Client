@@ -104,6 +104,18 @@ class ServerManagement (
         return mapper.readValue(response.body, SaveLeftTimeResponse::class.java)
     }
 
+    fun extendTime(time: Long): ExtendTimeResponse? {
+        val httpEntity: HttpEntity<ExtendTimeRequest> = getHttpEntityWithToken(ExtendTimeRequest(time))
+        val response: ResponseEntity<String> = getResponseEntityInStringFormat {
+            restTemplate.exchange("${serverConfiguration.serverBaseAddress}/api/v1/user/time/extend", HttpMethod.POST, httpEntity)
+        } ?: return null
+
+        // it has leaderBoardList & userNotification List
+        val mapper = jacksonObjectMapper()
+
+        return mapper.readValue(response.body, ExtendTimeResponse::class.java)
+    }
+
     /**
      * returns httpEntity with token applied.
      * add headerEntity if there is any body to sent to server.

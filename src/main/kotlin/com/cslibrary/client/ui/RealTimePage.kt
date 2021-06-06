@@ -2,6 +2,7 @@ package com.cslibrary.client.ui
 
 import com.cslibrary.client.data.request.SaveLeftTime
 import com.cslibrary.client.data.request.StateChangeRequest
+import com.cslibrary.client.data.response.ExtendTimeResponse
 import com.cslibrary.client.data.response.SaveLeftTimeResponse
 import com.cslibrary.client.io.MainIO
 import com.cslibrary.client.server.ServerManagement
@@ -76,7 +77,11 @@ class RealTimePage (
                         if (leftTimeGlobal <= 60 * 60) {
                             MainIO.printError("남은 시간이 1시간 이하입니다. 시간을 연장할 수 없습니다.")
                         } else {
-                            leftTimeGlobal += 60 * 60
+                            val extendTimeResponse: ExtendTimeResponse = serverManagement.extendTime(leftTimeGlobal) ?: run {
+                                MainIO.printError("시간을 늘릴 수 없습니다. 다음에 다시 시도해 주세요.")
+                                return 1
+                            }
+                            leftTimeGlobal = extendTimeResponse.updatedLeftTime
                             MainIO.printNormal("1시간 연장되었습니다.")
                         }
                         MainIO.waitFor()
