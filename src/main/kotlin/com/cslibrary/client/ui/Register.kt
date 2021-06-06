@@ -4,13 +4,14 @@ import com.cslibrary.client.data.request.RegisterRequest
 import com.cslibrary.client.data.response.RegisterResponse
 import com.cslibrary.client.server.ServerManagement
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class Register(
     private val shape: Shape,
     private val serverManagement: ServerManagement
 ) {
-
+    val scanner: Scanner = Scanner(System.`in`)
     fun registerUser(){
 
         while(true){
@@ -42,6 +43,8 @@ class Register(
 
                 if(registerResponse == null){
                     println("Register Failed!\nGoing back to Main Page")
+                    println("\nPress enter key to continue..")
+                    scanner.nextLine()
                     return
                 }
 
@@ -49,6 +52,8 @@ class Register(
                     println("Successfully registered with: ${registerResponse?.registeredId}")
                 }else{
                     println("Register Failed!\nGoind back to Main Page")
+                    println("\nPress enter key to continue..")
+                    scanner.nextLine()
                     return
                 }
             }

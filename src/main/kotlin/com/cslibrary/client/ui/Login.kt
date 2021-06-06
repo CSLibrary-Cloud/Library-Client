@@ -4,6 +4,7 @@ import com.cslibrary.client.data.request.LoginRequest
 import com.cslibrary.client.data.response.LoginResponse
 import com.cslibrary.client.server.ServerManagement
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class Login(
@@ -11,6 +12,8 @@ class Login(
     private val serverManagement: ServerManagement,
     private val secondPage: SecondPage,
 ) {
+
+    val scanner: Scanner = Scanner(System.`in`)
 
     fun loginUser() {
 
@@ -36,6 +39,8 @@ class Login(
 
                 if(loginResponse == null){
                     println("Login Failed!\nGoing back to Main Page")
+                    println("\nPress enter key to continue..")
+                    scanner.nextLine()
                     return
                 }
 
@@ -47,6 +52,8 @@ class Login(
                         return
                     }else{
                         println("Login Failed!\nGoing back to Main Page")
+                        println("\nPress enter key to continue..")
+                        scanner.nextLine()
                         return
                     }
                 }

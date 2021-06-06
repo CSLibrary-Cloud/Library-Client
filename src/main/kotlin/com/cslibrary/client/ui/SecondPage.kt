@@ -13,7 +13,6 @@ class SecondPage (
         clearScreen()
         shape.makeRec(3, "Select Seat")
         val userLeftTimeResponse: UserLeftTimeResponse = seat.reserveSeat() ?: run{
-            print("Fail to select Seat!\nGoing back to Main Page")
             return
         }
         println("Seat Reserved: ${userLeftTimeResponse.reservedSeat.reservedSeatNumber+1}")

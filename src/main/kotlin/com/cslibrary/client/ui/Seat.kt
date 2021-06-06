@@ -22,6 +22,8 @@ class Seat (
 
         if(seatResponse == null){
             println("Get Seat Information Failed!\nGoing back to Main Page")
+            println("\nPress enter key to continue..")
+            scanner.nextLine()
             return false
         }
 
@@ -30,19 +32,17 @@ class Seat (
             true
         } else {
             println("Get Seat Information Failed!\nGoing back to Main Page")
+            println("\nPress enter key to continue..")
+            scanner.nextLine()
             return false
         }
     }
 
-    fun showSeat() {
-        if (!showSeatAsUI()) return
-println("Press enter key to continue..")
-        scanner.nextLine()
-    }
-
     fun changeSeat() {
         val inputNumber: Int = chooseSeatInput() ?: run {
-            println("입력이 잘못 되었습니다.")
+            println("null Input\nFailed to change seat!")
+            println("\nPress enter key to continue..")
+            scanner.nextLine()
             return
         }
         serverManagement.seatChangeCommunication(SeatSelectRequest(inputNumber-1))
@@ -50,7 +50,9 @@ println("Press enter key to continue..")
 
     fun reserveSeat(): UserLeftTimeResponse? {
         val inputNumber: Int = chooseSeatInput() ?: run {
-            println("입력이 잘못 되었습니다.")
+            print("Fail to select Seat!\nGoing back to Main Page")
+            println("\nPress enter key to continue..")
+            scanner.nextLine()
             return null
         }
 
