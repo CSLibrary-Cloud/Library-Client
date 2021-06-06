@@ -41,6 +41,15 @@ class Register(
             },
             message = "Wrong PW Input: Password length should be >=8 and should contains at least one or more special letters."
         )
+
+        val userPasswordCheck: String = getUserAndValidateInput(
+            toExecute = {MainIO.getInputPassword("Input password again: ")},
+            additionalStep = { inputString ->
+                (inputString == userPassword)
+            },
+            message = "Password does not match!"
+        )
+
         val userName: String = getUserAndValidateInput({MainIO.getInputNormal("User Name: ")})
         val userPhoneNumber: String = getUserAndValidateInput(
             toExecute = {MainIO.getInputNormal("Phone Number: ")},
