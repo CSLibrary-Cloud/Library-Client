@@ -27,8 +27,8 @@ class Shape {
     fun makeSeat(arr: List<SeatResponse>){
         var isUs : String = ""
 
-        makeRec(2,"SEAT")
-        MainIO.printNormal("O for Occupied, E for Empty.")
+        makeRec(2,"좌석")
+        MainIO.printNormal("O는 사용중[Occupied], E는 빈 좌석[Empty]을 의미합니다.")
 
         for (i in arr.indices){
             //NxN 에서 N 만큼 나누기
@@ -47,7 +47,7 @@ class Shape {
 
     fun makeTime(t : Long){
         //남은 시간 가져오기
-        MainIO.printNormal("\n\nLeft Time : $t\n")
+        MainIO.printNormal("\n\n남은 시간 : $t\n")
     }
 
     fun makeLeaderBoard(invokeUpdate: (()-> SaveLeftTimeResponse)? = null){

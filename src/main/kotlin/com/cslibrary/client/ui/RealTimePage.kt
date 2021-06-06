@@ -48,7 +48,7 @@ class RealTimePage (
 
             while(true){
                 MainIO.clearScreen()
-                shape.makeRec(3,"Pause Page")
+                shape.makeRec(3,"일시정지 메뉴")
                 MainIO.printNormal(
                     """
                     |1. 계속 공부
@@ -58,7 +58,7 @@ class RealTimePage (
                 """.trimMargin()
                 )
 
-                when (MainIO.getInputNormal("Choose the number: ")) {
+                when (MainIO.getInputNormal("메뉴 숫자룰 선택해 주세요: ")) {
                     "1" -> {
                         MainIO.printNormal("계속 공부 선택")
                         serverManagement.stateCommunication(
@@ -68,7 +68,7 @@ class RealTimePage (
                         return 1
                     }
                     "2" -> {
-                        MainIO.printNormal("Change Seat Selected")
+                        MainIO.printNormal("좌석 재배치 메뉴가 선택되었습니다.")
                         seat.changeSeat()
                         cleanupAllTimers()
                         return 1
@@ -138,7 +138,8 @@ class RealTimePage (
     // Refresh Leaderboard from server
     private fun makeLeaderboardRefresh(timerTask: TimerTask) {
         val response: SaveLeftTimeResponse = serverManagement.saveLeftTimeCommunication(SaveLeftTime(leftTimeGlobal)) ?: run {
-            MainIO.printError("LeaderBoard Failed.\nGoing back to Main Page")
+            MainIO.printError("리더보드 관련 내용을 가져오는데 실패하였습니다.")
+            MainIO.printError("메인 메뉴로 돌아갑니다..")
             MainIO.waitFor()
 
             flag = false
@@ -159,7 +160,7 @@ class RealTimePage (
     // When client's time is over.
     private fun handleClientTimeout(timerTask: TimerTask) {
         serverManagement.stateCommunication(StateChangeRequest("exit"))
-        MainIO.printNormal("Your time has expired!!")
+        MainIO.printNormal("사용자에게 할당된 시간이 모두 소진되었습니다!")
         MainIO.waitFor()
         timerTask.cancel()
     }
@@ -167,9 +168,10 @@ class RealTimePage (
     // When Client's break time is over.
     private fun handleClientBreakTimeout(timerTask: TimerTask, breakTime: Long) {
         if (breakTime >= 60) {
-            MainIO.printNormal("Break time expired. Select any menu to return to main menu.")
+            MainIO.printNormal("휴식 시간 1시간을 모두 소진하여 메인 메뉴로 돌아갑니다.")
             serverManagement.stateCommunication(StateChangeRequest("exit"))
             timerTask.cancel()
+            MainIO.waitFor()
             throw RuntimeException("Break time expired!")
         }
     }

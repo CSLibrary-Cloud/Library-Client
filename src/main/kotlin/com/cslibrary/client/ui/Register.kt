@@ -17,16 +17,17 @@ class Register(
 
     fun registerUser(){
         MainIO.clearScreen()
-        shape.makeRec(3,"Register Page")
-        MainIO.printNormal("Enter your information")
+        shape.makeRec(3,"회원가입 메뉴")
+        MainIO.printNormal("정보를 입력해 주세요.")
 
         // Register 하기
         (serverManagement.signUpCommunication(getRegisterRequest()) ?: run {
-            MainIO.printError("Register Failed!\nGoing back to Main Page")
+            MainIO.printError("회원가입에 실패하였습니다!")
+            MainIO.printError("메인 메뉴로 돌아갑니다..")
             MainIO.waitFor()
             return
         }).also {
-            MainIO.printNormal("Successfully registered with: ${it.registeredId}")
+            MainIO.printNormal("${it.registeredId} 아이디로 회원가입이 완료되었습니다.")
             MainIO.waitFor()
         }
     }
@@ -39,7 +40,7 @@ class Register(
             additionalStep = { inputString ->
                 (inputString.length >= 8) && (passwordRegex.matches(inputString))
             },
-            message = "Wrong PW Input: Password length should be >=8 and should contains at least one or more special letters."
+            message = "비밀번호는 8자 이상이어야 되며, 특수문자 @, #, $, %, ! 중 하나를 포함해야 됩니다!"
         )
 
         val userPasswordCheck: String = getUserAndValidateInput(
@@ -47,7 +48,7 @@ class Register(
             additionalStep = { inputString ->
                 (inputString == userPassword)
             },
-            message = "Password does not match!"
+            message = "패스워드가 서로 맞지 않습니다!"
         )
 
         val userName: String = getUserAndValidateInput({MainIO.getInputNormal("User Name: ")})
@@ -56,7 +57,7 @@ class Register(
             additionalStep = { inputString ->
                 phoneRegex.matches(inputString)
             },
-            message = "Wrong Phone Number input. For example, input like: 010-xxxx-xxxx"
+            message = "핸드폰 번호 입력이 잘못되었습니다. 다음과 같이 입력해 주세요: 010-xxxx-xxxx"
         )
 
         return RegisterRequest(

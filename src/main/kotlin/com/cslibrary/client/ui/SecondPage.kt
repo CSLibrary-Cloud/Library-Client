@@ -12,12 +12,12 @@ class SecondPage (
 ){
     fun secondPage(){
         MainIO.clearScreen()
-        shape.makeRec(3, "Select Seat")
+        shape.makeRec(3, "좌석 선택 메뉴")
         val userLeftTimeResponse: UserLeftTimeResponse = seat.reserveSeat() ?: run {
-            MainIO.printError("Cannot reserve seat!")
+            MainIO.printError("자석을 예약할 수 없습니다!")
             return
         }
-        MainIO.printNormal("Seat Reserved: ${userLeftTimeResponse.reservedSeat.reservedSeatNumber+1}")
+        MainIO.printNormal("${userLeftTimeResponse.reservedSeat.reservedSeatNumber+1} 번 좌석이 예약되었습니다.")
 
         var num : Int = 1
         while(true){

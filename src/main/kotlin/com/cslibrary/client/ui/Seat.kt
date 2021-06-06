@@ -18,7 +18,8 @@ class Seat (
 
     private fun showSeatAsUI(): Boolean {
         val seatResponse : List<SeatResponse> = serverManagement.getSeatInformation() ?: run {
-            MainIO.printError("Get Seat Information Failed!\nGoing back to Main Page")
+            MainIO.printError("좌석 정보를 가져오는 데 실패하였습니다!")
+            MainIO.printError("메인 메뉴로 돌아갑니다..")
             MainIO.waitFor()
             return false
         }
@@ -27,7 +28,8 @@ class Seat (
             shape.makeSeat(seatResponse)
             true
         } else {
-            MainIO.printError("Get Seat Information Failed!\nGoing back to Main Page")
+            MainIO.printError("좌석 정보를 가져오는 데 실패하였습니다!")
+            MainIO.printError("메인 메뉴로 돌아갑니다..")
             MainIO.waitFor()
             return false
         }
@@ -35,7 +37,8 @@ class Seat (
 
     fun changeSeat() {
         val inputNumber: Int = chooseSeatInput() ?: run {
-            MainIO.printError("null Input\nFailed to change seat!")
+            MainIO.printError("Null Input!")
+            MainIO.printError("좌석 재배치 요청이 실패하였습니다!")
             MainIO.waitFor()
             return
         }
@@ -44,7 +47,8 @@ class Seat (
 
     fun reserveSeat(): UserLeftTimeResponse? {
         val inputNumber: Int = chooseSeatInput() ?: run {
-            MainIO.printError("Fail to select Seat!\nGoing back to Main Page")
+            MainIO.printError("좌석을 선택하는 데 실패하였습니다!")
+            MainIO.printError("메인 메뉴로 돌아갑니다..")
             MainIO.waitFor()
             return null
         }
@@ -56,7 +60,7 @@ class Seat (
     // isSeatSelect == true -> 좌석 선택, false이면 좌석 수정
     private fun chooseSeatInput(): Int? {
         if (!showSeatAsUI()) return null
-        return convertStringToInt(MainIO.getInputNormal("Choose the Seat Number: "))
+        return convertStringToInt(MainIO.getInputNormal("좌석 번호를 선택해 주세요: "))
     }
 
     private fun convertStringToInt(target: String): Int? {

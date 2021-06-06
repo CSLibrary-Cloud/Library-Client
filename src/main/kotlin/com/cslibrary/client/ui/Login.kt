@@ -16,7 +16,7 @@ class Login(
 
         while (true) {
             MainIO.clearScreen()
-            shape.makeRec(3, "Login Page")
+            shape.makeRec(3, "로그인 메뉴")
             val userId: String = MainIO.getInputNormal("ID: ")
             val userPassword: String = MainIO.getInputPassword("PW: ")
 
@@ -33,7 +33,7 @@ class Login(
 
             //response로 받은 token
             if (loginResponse.userToken.isNotEmpty()) {
-                MainIO.printNormal("Successfully Logged-In!")
+                MainIO.printNormal("로그인이 성공적으로 수행되었습니다!")
                 secondPage.secondPage()
                 return
             }else{
@@ -44,7 +44,8 @@ class Login(
     }
 
     private fun handleLoginFail() {
-        MainIO.printError("Login Failed!\nGoing back to Main Page")
+        MainIO.printError("로그인에 실패하였습니다!")
+        MainIO.printError("메인 페이지로 돌아갑니다..")
         MainIO.waitFor()
     }
 }
