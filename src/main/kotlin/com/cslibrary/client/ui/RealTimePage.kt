@@ -137,6 +137,7 @@ class RealTimePage (
                     }
                     "4" -> {
                         usertimer.cancel()
+                        breakTimer.cancel()
                         flag = false
                         serverManagement.stateCommunication(
                             StateChangeRequest("exit")

@@ -50,6 +50,7 @@ class Register(
 
                 if (registerResponse?.registeredId!!.isNotEmpty()) {
                     println("Successfully registered with: ${registerResponse?.registeredId}")
+                    return
                 }else{
                     println("Register Failed!\nGoind back to Main Page")
                     println("\nPress enter key to continue..")

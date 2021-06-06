@@ -32,7 +32,7 @@ class MainPage(
             println("1. Login\n2. Register\n3. Report User\n4. Finish")
             print("Choose the number : ")
             val ch = scanner.nextLine()
-            when(ch!!) {
+            when(ch) {
                 "1" -> {
                     println("Login Selected")
                     login.loginUser()
